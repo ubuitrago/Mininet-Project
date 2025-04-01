@@ -39,3 +39,8 @@ $ source myvenv/bin/activate
 (myvenv)$ python -m pip install -r requirements.txt
 
 ```
+### Recording Trace
+The Python script __trace_tcp_perf.py__ automates the process of starting mininet (TCP RENO) in the dumbbell topology, running "perf record", generating the perf script, parsing the script for "snd_cwnd", & generating plots with matplotlib. It needs to run as sudo. To avoid "Module Not Found errors", activate the python virtualenv and run like so:
+```
+(myvenv)$ sudo /home/mininet/Mininet-Project/myvenv/bin/python trace_tcp_perf.py
+```
