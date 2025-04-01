@@ -2,6 +2,8 @@
 
 import subprocess
 import time
+import os
+import signal
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,31 +20,45 @@ def run_tcp_workload(cctrl="reno"):
     tcp_reno.run()
 
 def run_perf_record(duration=30):
-    print(f"Recording perf trace for {duration} seconds...")
+    print(f"[Perf] Starting perf record for {duration} seconds...")
+
     cmd = [
         "sudo", "perf", "record",
         "-e", "tcp:tcp_probe",
-        "-a",  # system-wide
-        "-o", str(PERF_DATA)
+        "-a"
     ]
-    proc = subprocess.Popen(cmd)
-    time.sleep(duration)
-    proc.terminate()
-    proc.wait()
+
+    perf_proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    # time.sleep(duration)
+    # perf_proc.terminate()
+    # Fork the process to allow clean SIGINT without blocking
+    pid = os.fork()
+    if pid == 0:
+        # Child process: sleep then send SIGINT
+        time.sleep(duration)
+        perf_proc.send_signal(signal.SIGINT)
+        exit(0)
+    else:
+        # Parent process: wait for perf to exit
+        with open(PERF_DATA, "w") as out:
+            perf_proc.stdout.read().decode("utf-8")
+        #perf_proc.wait(timeout=duration+1)
+        perf_proc.terminate()
+        print("[Perf] Trace collection completed.")
+
 
 def run_perf_script():
     print("Extracting perf script output...")
-    # cmd = [
-    #     "sudo", "perf", "script",
-    #     "--header",
-    #     "-F", "comm,pid,tid,cpu,time,event",
-    #     "-o", PERF_TRACE
-    # ]
-    # with open(PERF_TRACE, "w") as out:
-    #     subprocess.run(cmd, stdout=out)
-    cmd = ["sudo", "perf", "report", "--header"]
+    cmd = [
+        "sudo", "perf", "script",
+        "--header",
+        "-F", "comm,pid,tid,cpu,time,event"
+    ]
     with open(PERF_TRACE, "w") as out:
         subprocess.run(cmd, stdout=out)
+    # cmd = ["sudo", "perf", "report", "--header"]
+    # with open(PERF_TRACE, "w") as out:
+    #     subprocess.run(cmd, stdout=out)
 
 def parse_perf_trace(trace_file):
     print("Parsing trace...")
@@ -93,13 +109,20 @@ def plot_graphs(df, output_prefix='tcp_reno'):
     print("Graphs saved as PNGs.")
 
 if __name__ == "__main__":
-    duration = 30 
+    duration = 10
+
+    # Start workload in background
     workload_thread = threading.Thread(target=run_tcp_workload)
-    perf_tracing_thread = threading.Thread(target=run_perf_record, args=duration)
-    perf_tracing_thread.start()
-    time.sleep(2)
     workload_thread.start()
-    perf_tracing_thread.join()
+
+    # Start perf record in main thread
+    run_perf_record(duration)
+
+    # Wait for workload to complete
+    workload_thread.join()
+
+    # Extract and plot
     run_perf_script()
     df = parse_perf_trace(PERF_TRACE)
     plot_graphs(df)
+

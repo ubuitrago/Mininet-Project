@@ -24,6 +24,6 @@ def run():
     # CLI(net)
     net.stop()
 
-# if __name__ == '__main__':
-#     setLogLevel('info')
-#     run()
+if __name__ == '__main__':
+    setLogLevel('info')
+    run()
