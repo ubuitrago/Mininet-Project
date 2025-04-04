@@ -1,0 +1,1 @@
+ iperf3 -V -4 -i 1 -f m -d -t $time -c $server -p $port > $logfile &'
