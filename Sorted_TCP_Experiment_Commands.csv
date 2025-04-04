@@ -1,0 +1,25 @@
+,experiment,delay,cctrl,command
+0,exp1,21,reno,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 21 --cctrl reno
+4,exp1,81,reno,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 81 --cctrl reno
+8,exp1,162,reno,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 162 --cctrl reno
+12,exp2,21,reno,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 21 --cctrl reno
+16,exp2,81,reno,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 81 --cctrl reno
+20,exp2,162,reno,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 162 --cctrl reno
+1,exp1,21,cubic,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 21 --cctrl cubic
+5,exp1,81,cubic,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 81 --cctrl cubic
+9,exp1,162,cubic,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 162 --cctrl cubic
+13,exp2,21,cubic,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 21 --cctrl cubic
+17,exp2,81,cubic,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 81 --cctrl cubic
+21,exp2,162,cubic,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 162 --cctrl cubic
+2,exp1,21,rtt,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 21 --cctrl rtt
+6,exp1,81,rtt,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 81 --cctrl rtt
+10,exp1,162,rtt,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 162 --cctrl rtt
+14,exp2,21,rtt,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 21 --cctrl rtt
+18,exp2,81,rtt,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 81 --cctrl rtt
+22,exp2,162,rtt,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 162 --cctrl rtt
+3,exp1,21,bbr,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 21 --cctrl bbr
+7,exp1,81,bbr,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 81 --cctrl bbr
+11,exp1,162,bbr,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 162 --cctrl bbr
+15,exp2,21,bbr,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 21 --cctrl bbr
+19,exp2,81,bbr,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 81 --cctrl bbr
+23,exp2,162,bbr,sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp2 --delay 162 --cctrl bbr

@@ -7,7 +7,7 @@ BITS_PER_PKT = PKT_SIZE * 8  # 12000 bits
 def pms_to_mbps(pms): return (pms * BITS_PER_PKT) / 1000
 
 class DumbbellTopo(Topo):
-    def build(self, delay=21):
+    def build(self, delay:int = 21):
         # Hosts
         h1, h2 = self.addHost('h1'), self.addHost('h2')
         h3, h4 = self.addHost('h3'), self.addHost('h4')
@@ -37,4 +37,4 @@ class DumbbellTopo(Topo):
         self.addLink(s2, r2, cls=TCLink, delay='0ms', bw=access_bw, max_queue_size=sbuf, use_htb=True)
 
         # Bottleneck link
-        self.addLink(r1, r2, cls=TCLink, bw=backbone_bw, delay=backbone_delay, max_queue_size=backbone_buf , use_htb=True)
+        self.addLink(r1, r2, cls=TCLink, bw=backbone_bw, delay=delay, max_queue_size=backbone_buf , use_htb=True)

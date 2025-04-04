@@ -8,6 +8,7 @@ from mininet.cli import CLI
 
 import os
 import threading
+import subprocess
 import sys
 import time
 
@@ -42,7 +43,8 @@ class DumbbellTopo(Topo):
 
 def log_tcp_info(host, target_ip, output_file, duration):
     cmd = f"while true; do echo $(date +%s) >> {output_file}; ss -ti dst {target_ip} >> {output_file}; sleep 1; done"
-    host.cmd(f'{cmd} &')
+    process = subprocess.Popen(cmd, shell=True, executable='/bin/bash', preexec_fn=os.setsid)
+    return process
 
 def run(cc_algo, delay, output_file):	
     for suffix in ["_flow1.txt", "_flow2.txt"]:
@@ -72,7 +74,9 @@ def run(cc_algo, delay, output_file):
         host.cmd(f'echo {cc_algo} > /proc/sys/net/ipv4/tcp_congestion_control')
 
     print("[+] Starting flow 1: h1 -> h3 for 2000 seconds")
-    log_tcp_info(h1, "10.0.0.3", output_file + "_flow1.txt", 2000)
+    #log_thread = threading.Thread(target=log_tcp_info, args=[h1, "10.0.0.3", output_file + "_flow1.txt", 2000])
+    log_thread = log_tcp_info(h1, "10.0.0.3", output_file + "_flow1.txt", 2000)
+    #log_thread.start()
     h3.cmd('iperf -s -i &')
     h1.cmd(f'iperf -c 10.0.0.3 -t 2000 &')
 
@@ -89,7 +93,7 @@ def run(cc_algo, delay, output_file):
 
     print("[+] Stopping network...")
     net.stop()
-
+    log_thread.terminate()
 
 if __name__ == '__main__':
     os.system("mn -c")
