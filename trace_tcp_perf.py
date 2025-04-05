@@ -127,7 +127,7 @@ if __name__ == "__main__":
     parser.add_argument("--cctrl", type=str, default="reno", help="Congestion control algorithm (reno, cubic, rtt, bbr)")
     args = parser.parse_args()
 
-    Cleanup
+    #Cleanup
     print("Cleaning up any old log files...")
     cleanup(args.experiment, args.delay, args.cctrl)
     # Start workload & perf script
