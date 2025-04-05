@@ -99,10 +99,10 @@ def plot_exp(flow_1:pd.DataFrame, flow_2:pd.DataFrame, title="CWND over Time", o
     plt.figure(figsize=(10, 5))
     if "throughput" in output:
         # Flow 1
-        plt.plot(flow_1['time'], flow_1['bitrate'], color='black', label='Flow 1 (h1 → h3)')
+        plt.plot(flow_1['time'], flow_1['bitrate_mbps'], color='black', label='Flow 1 (h1 → h3)')
 
         # Flow 2
-        plt.plot(flow_2['time'], flow_2['bitrate'], color='orange', label='Flow 2 (h2 → h4)')
+        plt.plot(flow_2['time'], flow_2['bitrate_mbps'], color='orange', label='Flow 2 (h2 → h4)')
         plt.ylabel("Throughput (Mbps)")
 
     else:
