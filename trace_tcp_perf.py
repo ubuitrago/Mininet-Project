@@ -34,27 +34,41 @@ def run_tcp_workload(experiment:str, delay:int, cctrl:str):
     print(f"Running Congestion Control {cctrl} workload")
     run_experiment(experiment=experiment, one_way_delay_ms=delay, cctrl=cctrl)
     
-def parse_iperf_bit_trace(file_path, mss_bytes=1448):
-    print("Parsing iperf3 throughput trace...")
-    pattern = re.compile(r'\[\s*\d+\]\s+([\d\.]+)-[\d\.]+\s+sec\s+[\d\.]+\s+MBytes\s+([\d\.]+)\s+Mbits/sec\s+\d+\s+(\d+)\s+KBytes')
+def parse_iperf_bit_trace(file_path):
+    """
+    Parses iperf3 client output and extracts throughput (bitrate) in Mbps.
+    """
+    print("Parsing iperf3 bitrate trace...")
+
+    # Match lines like:
+    # [  5]   0.00-1.00   sec  17.2 MBytes  144 Mbits/sec    0   928 KBytes
+    pattern = re.compile(
+        r'\[\s*\d+\]\s+([\d\.]+)-[\d\.]+\s+sec\s+[\d\.]+\s+[MK]Bytes\s+([\d\.]+)\s+(M|K)bits/sec'
+    )
+
     times = []
-    bitrate = []
+    bitrates = []
 
     with open(file_path, 'r') as f:
         for line in f:
             match = pattern.search(line)
             if match:
                 time_sec = float(match.group(1))
-                times.append(time_sec)
-                mbytes = float(match.group(2))
-                bitrate.append(mbytes)
+                rate_val = float(match.group(2))
+                rate_unit = match.group(3)
 
-    df = pd.DataFrame({'time': times, 'bitrate': bitrate})
+                mbps = rate_val / 1000 if rate_unit == 'K' else rate_val
+                times.append(time_sec)
+                bitrates.append(mbps)
+
+    df = pd.DataFrame({'time': times, 'bitrate_mbps': bitrates})
     return df
 
 def parse_iperf_cwnd_trace(file_path, mss_bytes=1448):
     print("Parsing iperf3 cwnd trace...")
-    pattern = re.compile(r'\[\s*\d+\]\s+([\d\.]+)-[\d\.]+\s+sec\s+[\d\.]+\s+MBytes\s+[\d\.]+\s+Mbits/sec\s+\d+\s+(\d+)\s+KBytes')
+    pattern = re.compile(
+        r'\[\s*\d+\]\s+([\d\.]+)-[\d\.]+\s+sec\s+[\d\.]+\s+MBytes\s+[\d\.]+\s+Mbits/sec\s+\d+\s+([\d\.]+)\s+(K|M)Bytes'
+    )
     times = []
     cwnd_packets = []
 
@@ -63,8 +77,16 @@ def parse_iperf_cwnd_trace(file_path, mss_bytes=1448):
             match = pattern.search(line)
             if match:
                 time_sec = float(match.group(1))
-                cwnd_kb = int(match.group(2))
-                cwnd_bytes = cwnd_kb * 1024
+                cwnd_value = float(match.group(2))
+                unit = match.group(3)
+
+                if unit == 'K':
+                    cwnd_bytes = cwnd_value * 1024
+                elif unit == 'M':
+                    cwnd_bytes = cwnd_value * 1024 * 1024
+                else:
+                    continue  # unknown unit
+                # Convert bytes to packets
                 cwnd_pkts = cwnd_bytes / mss_bytes
                 times.append(time_sec)
                 cwnd_packets.append(cwnd_pkts)
@@ -105,7 +127,7 @@ if __name__ == "__main__":
     parser.add_argument("--cctrl", type=str, default="reno", help="Congestion control algorithm (reno, cubic, rtt, bbr)")
     args = parser.parse_args()
 
-    # Cleanup
+    Cleanup
     print("Cleaning up any old log files...")
     cleanup(args.experiment, args.delay, args.cctrl)
     # Start workload & perf script

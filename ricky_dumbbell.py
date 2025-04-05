@@ -17,9 +17,11 @@ class DumbbellTopo(Topo):
 		h3 = self.addHost('h3')
 		h4 = self.addHost('h4')
 		
+		# Access Links
 		s1 = self.addSwitch('s1')
 		s2 = self.addSwitch('s2')
 
+		# Backbone Routers
 		r1 = self.addSwitch('r1')
 		r2 = self.addSwitch('r2')
 
