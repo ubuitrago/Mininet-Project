@@ -32,16 +32,20 @@ def run_experiment(
     h3.cmd("iperf3 -s -i 1 -p 5001 > h3_server.txt &")
     h4.cmd("iperf3 -s -i 1 -p 5001 > h4_server.txt &")
 
-    # Start flow 1 (immediate)
-    h1.cmd(f"iperf3 -V -4 -i 1 -f m -c {h3.IP()} -t 2000 -p 5001 > h1_client.txt &")
 
     if experiment == "exp1":
+        # Start flow 1 (immediate)
+        h1.cmd(f"iperf3 -V -4 -i 1 -f m -c {h3.IP()} -t 2000 -p 5001 > h1_client.txt &")
+        print("[exp1] Started flow1")
         print("[exp1] Starting flow2 with 250s delay")
         time.sleep(250)
         h2.cmd(f"iperf3 -V -4 -i 1 -f m -c {h4.IP()} -t 1750 -p 5001 > h2_client.txt")
     elif experiment == "exp2":
+        # Start flow 1 (immediate)
+        h1.cmd(f"iperf3 -V -4 -i 1 -f m -c {h3.IP()} -t 1000 -p 5001 > h1_client.txt &")
+        print("[exp2] Started flow2")
         print("[exp2] Starting flow2 immediately")
-        h2.cmd(f"iperf3 -V -4 -i 1 -f m -c {h4.IP()} -t 2000 -p 5001 > h2_client.txt")
+        h2.cmd(f"iperf3 -V -4 -i 1 -f m -c {h4.IP()} -t 1000 -p 5001 > h2_client.txt")
     # NOTE: We run flow 2 in the foreground ALWAYS, if not the log output will be interrupted by net.stop()
     print("[+] Stopping network...")
     net.stop()
