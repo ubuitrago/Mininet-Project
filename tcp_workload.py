@@ -9,7 +9,7 @@ from typing import Literal
 def run_experiment(
     experiment: Literal["exp1", "exp2"] = "exp1",
     one_way_delay_ms=21,
-    cctrl: Literal["reno", "cubic", "rtt", "bbr"] = "reno"
+    cctrl: Literal["reno", "cubic", "nv", "bbr"] = "reno"
 ):
     """
     Runs TCP experiment with configurable flow timing and congestion control.
@@ -43,7 +43,7 @@ def run_experiment(
     elif experiment == "exp2":
         # Start flow 1 (immediate)
         h1.cmd(f"iperf3 -V -4 -i 1 -f m -c {h3.IP()} -t 1000 -p 5001 > h1_client.txt &")
-        print("[exp2] Started flow2")
+        print("[exp2] Started flow1")
         print("[exp2] Starting flow2 immediately")
         h2.cmd(f"iperf3 -V -4 -i 1 -f m -c {h4.IP()} -t 1000 -p 5001 > h2_client.txt")
     # NOTE: We run flow 2 in the foreground ALWAYS, if not the log output will be interrupted by net.stop()
