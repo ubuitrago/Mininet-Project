@@ -124,7 +124,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run TCP workload with specified parameters.")
     parser.add_argument("--experiment", type=str, default="exp1", help="Experiment type (exp1 or exp2)")
     parser.add_argument("--delay", type=int, default=21, help="One-way delay in ms")
-    parser.add_argument("--cctrl", type=str, default="reno", help="Congestion control algorithm (reno, cubic, rtt, bbr)")
+    parser.add_argument("--cctrl", type=str, default="reno", help="Congestion control algorithm (reno, cubic, nv, bbr)")
     args = parser.parse_args()
 
     #Cleanup
