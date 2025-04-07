@@ -37,3 +37,6 @@ For example, run the very first experiment with:
 sudo $(pwd)/myvenv/bin/python3 trace_tcp_perf.py --experiment exp1 --delay 21 --cctrl reno
 ```
 [def]: Sorted_TCP_Experiment_Commands.csv
+
+## Discussion
+View the discussion and comments about all the collected plots [here](Discussion.pdf)
